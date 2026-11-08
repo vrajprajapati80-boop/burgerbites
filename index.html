@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Burger Bites - Food Menu</title>
+    <style>
+        :root {
+            --bg-color: #0d2836;
+            --card-bg: #13384b;
+            --accent-orange: #ff6b35;
+            --accent-yellow: #f7c548;
+            --text-light: #ffffff;
+            --text-dim: #a0c1d1;
+            --border-color: #214f68;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-light);
+            padding-bottom: 220px;
+        }
+
+        header {
+            background: linear-gradient(180deg, #091e29 0%, var(--bg-color) 100%);
+            padding: 20px 15px 15px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 2px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-img {
+            width: 65px;
+            height: 65px;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.4));
+        }
+
+        .brand-details {
+            text-align: left;
+        }
+
+        .brand-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--accent-yellow);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        .brand-tagline {
+            font-size: 12px;
+            color: var(--accent-orange);
+            font-weight: 600;
+            font-style: italic;
+        }
+
+        .delivery-tag {
+            font-size: 11px;
+            background: #e23744;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        .admin-toggle-btn {
+            background: var(--card-bg);
+            color: var(--text-light);
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .admin-toggle-btn:hover {
+            background: var(--accent-orange);
+            border-color: var(--accent-orange);
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 15px auto 5px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 12px 18px;
+            border-radius: 25px;
+            border: 1px solid var(--border-color);
+            background: #081923;
+            color: white;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-box::placeholder {
+            color: var(--text-dim);
+        }
+
+        .category-nav {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 10px 0;
+            max-width: 600px;
+            margin: 0 auto;
+            scrollbar-width: none;
+        }
+
+        .category-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .cat-pill {
+            background: var(--card-bg);
+            color: var(--text-dim);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            white-space: nowrap;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            transition: 0.2s;
+        }
+
+        .cat-pill.active, .cat-pill:hover {
+            background: var(--accent-orange);
+            color: white;
+            border-color: var(--accent-orange);
+        }
+
+        .container {
+            padding: 15px;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .admin-panel {
+            background: #081923;
+            border: 2px dashed var(--accent-orange);
+            padding: 18px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            display: none;
+        }
+
+        .admin-panel h3 {
+            margin-top: 0;
+            color: var(--accent-yellow);
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .admin-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: white;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .add-btn {
+            background: var(--accent-orange);
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .section-title {
+            font-size: 18px;
+            color: var(--accent-yellow);
+            margin: 25px 0 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .menu-item {
+            background: var(--card-bg);
+            padding: 14px;
+            margin-bottom: 12px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .item-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .img-box {
+            width: 75px;
+            height: 75px;
+            background: #081923;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .item-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .item-info h4 {
+            margin: 0;
+            font-size: 16px;
+            color: var(--text-light);
+        }
+
+        .item-info p {
+            margin: 4px 0 0;
+            font-size: 14px;
+            color: var(--accent-yellow);
+            font-weight: 700;
+        }
+
+        .item-subtext {
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-top: 2px;
+        }
+
+        .btn-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .qty-btn {
+            background: var(--accent-orange);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qty-btn.minus {
+            background: #3a5b6e;
+        }
+
+        .qty-count {
+            font-size: 15px;
+            font-weight: bold;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .del-btn {
+            background: #d32f2f;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .checkout-box {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 600px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #081923;
+            padding: 15px 20px 20px;
+            border-top: 3px solid var(--accent-orange);
+            box-shadow: 0 -10px 25px rgba(0,0,0,0.6);
+            box-sizing: border-box;
+            border-radius: 20px 20px 0 0;
+            z-index: 200;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+
+        .total-price {
+            color: var(--accent-yellow);
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            color: white;
+            border-radius: 8px;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .input-field::placeholder {
+            color: var(--text-dim);
+        }
+
+        .order-btn {
+            background: #25D366;
+            color: white;
+            border: none;
+            padding: 14px;
+            width: 100%;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+        }
+
+        .address-footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 12px;
+            color: var(--text-dim);
+            border-top: 1px solid var(--border-color);
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-top">
+            <div class="logo-container">
+                <svg class="logo-img" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M 20 100 A 80 80 0 0 1 180 100 L 180 110 L 20 110 Z" fill="#0b1b24" stroke="#e0e0e0" stroke-width="3"/>
+                    <circle cx="50" cy="50" r="3" fill="#ffffff" />
+                    <circle cx="150" cy="45" r="3" fill="#ffffff" />
+                    <rect x="52" y="60" width="22" height="32" rx="3" fill="#e23744"/>
+                    <polygon points="58,60 68,60 68,35 58,35" fill="#ffffff"/>
+                    <rect x="80" y="45" width="26" height="35" rx="3" fill="#e23744"/>
+                    <rect x="84" y="32" width="5" height="15" fill="#f7c548"/>
+                    <rect x="91" y="30" width="5" height="17" fill="#f7c548"/>
+                    <rect x="98" y="34" width="5" height="13" fill="#f7c548"/>
+                    <path d="M 68 75 Q 92 62 116 75 L 114 84 Q 92 73 70 84 Z" fill="#f7c548"/>
+                    <rect x="122" y="58" width="30" height="32" fill="#00a896"/>
+                    <rect x="125" y="62" width="24" height="12" fill="#e0fbfc"/>
+                    <rect x="125" y="62" width="24" height="12" fill="none" stroke="#00a896" stroke-width="2"/>
+                    <path d="M 25 110 Q 100 80 175 110 L 165 140 Q 100 115 35 140 Z" fill="#f7c548" stroke="#111" stroke-width="2"/>
+                    <text x="100" y="128" font-family="Impact, Arial Black, sans-serif" font-size="19" fill="#111" text-anchor="middle" font-weight="bold">BURGER BITES</text>
+                    <path d="M 50 140 L 150 140 L 140 156 L 60 156 Z" fill="#e23744"/>
+                    <text x="100" y="152" font-family="Arial, sans-serif" font-size="10" fill="#ffffff" text-anchor="middle" font-weight="bold">- simply tasty -</text>
+                </svg>
+                <div class="brand-details">
+                    <h1 class="brand-title">Burger Bites</h1>
+                    <div class="brand-tagline">- simply tasty -</div>
+                    <span class="delivery-tag">ZOMATO DELIVERY</span>
+                </div>
+            </div>
+            <button class="admin-toggle-btn" onclick="toggleAdmin()">⚙️ Admin</button>
+        </div>
+
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-box" placeholder="🔍 Search coffee, burgers, fries, pizza..." onkeyup="render()">
+        </div>
+
+        <div class="category-nav" id="categoryNav"></div>
+    </header>
+
+    <div class="container">
+        <div id="adminPanel" class="admin-panel">
+            <h3>🛠️ Add / Manage Products</h3>
+            <input type="text" id="newCat" class="admin-input" placeholder="Category (e.g., BURGER, PIZZA)">
+            <input type="text" id="newName" class="admin-input" placeholder="Item Name">
+            <input type="number" id="newPrice" class="admin-input" placeholder="Price (₹)">
+            <input type="text" id="newSubtext" class="admin-input" placeholder="Subtext/Description (Optional)">
+            <label style="font-size: 12px; color: var(--text-dim); display: block; margin-bottom: 5px;">Product Image (Optional):</label>
+            <input type="file" id="newImg" class="admin-input" accept="image/*">
+            <button class="add-btn" onclick="addNewProduct()">➕ Add Item</button>
+        </div>
+
+        <div id="menuItems"></div>
+
+        <div class="address-footer">
+            📍 <strong>03 SHIVAAY LANDMARK, KARODIYA BAJWA RD, VADODARA</strong>
+        </div>
+    </div>
+
+    <div class="checkout-box">
+        <div class="total-row">
+            <span>Grand Total:</span>
+            <span class="total-price">₹<span id="total">0</span></span>
+        </div>
+        <input type="text" id="custName" class="input-field" placeholder="Your Name">
+        <input type="text" id="custAddr" class="input-field" placeholder="Address / Table No.">
+        <button class="order-btn" onclick="sendOrder()">Send Order to WhatsApp 🛒</button>
+    </div>
+
+    <script>
+        const defaultProducts = [
+            // COFFEE
+            { cat: "COFFEE", name: "Cold Coffee", price: 40, img: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=300&q=80" },
+            { cat: "COFFEE", name: "Cold Chocolate", price: 50, img: "https://images.unsplash.com/photo-1544787219-7f47ccb76574?auto=format&fit=crop&w=300&q=80" },
+
+            // BURGER
+            { cat: "BURGER", name: "Regular Burger", price: 40, img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=300&q=80" },
+            { cat: "BURGER", name: "Chatpata Burger", price: 40, img: "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=300&q=80" },
+            { cat: "BURGER", name: "Tandoori Burger", price: 50, img: "https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?auto=format&fit=crop&w=300&q=80" },
+            { cat: "BURGER", name: "Peri-Peri Burger", price: 50, img: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=300&q=80" },
+            { cat: "BURGER", name: "Schezwan Burger", price: 50, subtext: "Liquid Cheese (+10RS) | Cheese Slice (+10RS)", img: "https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=300&q=80" },
+
+            // FRIES
+            { cat: "FRIES", name: "Salted Fries", price: 50, img: "https://images.unsplash.com/photo-1576107232684-1279f390859f?auto=format&fit=crop&w=300&q=80" },
+            { cat: "FRIES", name: "Peri Peri Fries", price: 60, img: "https://images.unsplash.com/photo-1630384060421-cb34d0dc8919?auto=format&fit=crop&w=300&q=80" },
+            { cat: "FRIES", name: "Chessy Peri Peri Fries", price: 70, img: "https://images.unsplash.com/photo-1585109649139-366815a0d713?auto=format&fit=crop&w=300&q=80" },
+            { cat: "FRIES", name: "Choose Any Dip", price: 10, subtext: "Tandoori, Mayo, Chessy", img: "https://images.unsplash.com/photo-1472476443507-c7a5948772fc?auto=format&fit=crop&w=300&q=80" },
+
+            // MOMOS
+            { cat: "MOMOS (5 Pcs)", name: "Veg Fried Momos", price: 60, img: "https://images.unsplash.com/photo-1625220194771-7ebdea0b70b9?auto=format&fit=crop&w=300&q=80" },
+            { cat: "MOMOS (5 Pcs)", name: "Cheese Paneer Momos", price: 80, img: "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=300&q=80" },
+
+            // GARLIC BREAD
+            { cat: "GARLIC BREAD", name: "Cheesy Garlicbread", price: 60, img: "https://images.unsplash.com/photo-1619535860434-ba1d8fa12536?auto=format&fit=crop&w=300&q=80" },
+            { cat: "GARLIC BREAD", name: "Cheese Ball", price: 60, img: "https://images.unsplash.com/photo-1541529086526-db283c563270?auto=format&fit=crop&w=300&q=80" },
+
+            // PIZZA
+            { cat: "PIZZA", name: "Margherita Pizza", price: 80, img: "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?auto=format&fit=crop&w=300&q=80" },
+            { cat: "PIZZA", name: "Onion Capsicum Pizza", price: 90, img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=300&q=80" },
+            { cat: "PIZZA", name: "Corn Pizza", price: 90, img: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=300&q=80" },
+            { cat: "PIZZA", name: "Tandoori Pizza", price: 100, img: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=300&q=80" },
+            { cat: "PIZZA", name: "Schezwan Pizza", price: 100, img: "https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?auto=format&fit=crop&w=300&q=80" },
+            { cat: "PIZZA", name: "Corn Capsicum Pizza", price: 100, img: "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=300&q=80" },
+            { cat: "PIZZA", name: "Special Pizza", price: 110, img: "https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?auto=format&fit=crop&w=300&q=80" }
+        ];
+
+        let products = JSON.parse(localStorage.getItem('burger_bites_menu')) || defaultProducts;
+        let cart = {};
+        let activeCategory = "ALL";
+
+        function toggleAdmin() {
+            let panel = document.getElementById('adminPanel');
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+            render();
+        }
+
+        function addNewProduct() {
+            let cat = document.getElementById('newCat').value.trim().toUpperCase();
+            let name = document.getElementById('newName').value.trim();
+            let price = parseFloat(document.getElementById('newPrice').value);
+            let subtext = document.getElementById('newSubtext').value.trim();
+            let imgInput = document.getElementById('newImg');
+
+            if (!cat || !name || isNaN(price)) {
+                alert("Please enter Category, Item Name, and Price!");
+                return;
+            }
+
+            let newItem = { cat, name, price, subtext, img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=300&q=80" };
+
+            if (imgInput.files && imgInput.files[0]) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    newItem.img = e.target.result;
+                    saveProduct(newItem);
+                }
+                reader.readAsDataURL(imgInput.files[0]);
+            } else {
+                saveProduct(newItem);
+            }
+        }
+
+        function saveProduct(item) {
+            products.push(item);
+            localStorage.setItem('burger_bites_menu', JSON.stringify(products));
+            document.getElementById('newCat').value = '';
+            document.getElementById('newName').value = '';
+            document.getElementById('newPrice').value = '';
+            document.getElementById('newSubtext').value = '';
+            document.getElementById('newImg').value = '';
+            render();
+            alert("New item added!");
+        }
+
+        function deleteProduct(index) {
+            if (confirm("Are you sure you want to delete this item?")) {
+                products.splice(index, 1);
+                localStorage.setItem('burger_bites_menu', JSON.stringify(products));
+                render();
+            }
+        }
+
+        function filterCategory(cat) {
+            activeCategory = cat;
+            render();
+        }
+
+        function renderCategories() {
+            const nav = document.getElementById('categoryNav');
+            const categories = ["ALL", ...new Set(products.map(p => p.cat))];
+            
+            nav.innerHTML = categories.map(cat => `
+                <div class="cat-pill ${activeCategory === cat ? 'active' : ''}" onclick="filterCategory('${cat}')">
+                    ${cat}
+                </div>
+            `).join('');
+        }
+
+        function render() {
+            renderCategories();
+            const list = document.getElementById('menuItems');
+            list.innerHTML = '';
+            let query = document.getElementById('searchInput').value.toLowerCase();
+            let currentCat = '';
+            let isAdminOpen = document.getElementById('adminPanel').style.display === 'block';
+
+            products.forEach((p, i) => {
+                if (query && !p.name.toLowerCase().includes(query) && !p.cat.toLowerCase().includes(query)) return;
+                if (activeCategory !== "ALL" && p.cat !== activeCategory && !query) return;
+
+                if (!query && activeCategory === "ALL" && p.cat !== currentCat) {
+                    currentCat = p.cat;
+                    list.innerHTML += `<div class="section-title">${currentCat}</div>`;
+                }
+
+                let qty = cart[i] || 0;
+                let deleteBtnHtml = isAdminOpen ? `<br><button class="del-btn" onclick="deleteProduct(${i})">Delete ❌</button>` : '';
+
+                let imageHtml = `<img src="${p.img}" class="item-img" alt="${p.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=300&q=80'">`;
+
+                list.innerHTML += `
+                    <div class="menu-item">
+                        <div class="item-left">
+                            <div class="img-box">${imageHtml}</div>
+                            <div class="item-info">
+                                <h4>${p.name}</h4>
+                                <p>₹${p.price}</p>
+                                ${p.subtext ? `<div class="item-subtext">${p.subtext}</div>` : ''}
+                                ${deleteBtnHtml}
+                            </div>
+                        </div>
+                        <div class="btn-box">
+                            <button class="qty-btn minus" onclick="update(${i}, -1)">-</button>
+                            <span class="qty-count">${qty}</span>
+                            <button class="qty-btn" onclick="update(${i}, 1)">+</button>
+                        </div>
+                    </div>`;
+            });
+            calculateTotal();
+        }
+
+        function update(i, c) {
+            cart[i] = Math.max(0, (cart[i] || 0) + c);
+            render();
+        }
+
+        function calculateTotal() {
+            let total = 0;
+            products.forEach((p, i) => total += (cart[i] || 0) * p.price);
+            document.getElementById('total').innerText = total;
+        }
+
+        function sendOrder() {
+            let name = document.getElementById('custName').value.trim();
+            let addr = document.getElementById('custAddr').value.trim();
+
+            if (!name || !addr) {
+                alert("Please enter your Name and Address / Table Number!");
+                return;
+            }
+
+            let items = "";
+            let total = 0;
+            products.forEach((p, i) => {
+                if (cart[i] > 0) {
+                    items += `• *${p.name}*: ${cart[i]} x ₹${p.price} = ₹${cart[i] * p.price}\n`;
+                    total += cart[i] * p.price;
+                }
+            });
+
+            if (total === 0) {
+                alert("Your cart is empty! Please select items first.");
+                return;
+            }
+
+            let msg = `🍔 *NEW ORDER - BURGER BITES*\n\n👤 *Name:* ${name}\n📍 *Address/Table:* ${addr}\n\n📋 *Order Items:*\n${items}\n💰 *Grand Total: ₹${total}*\n\nThank you for ordering!`;
+            
+            // Directed to +91 82000 97418
+            window.open(`https://wa.me/918200097418?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        render();
+    </script>
+</body>
+</html>
